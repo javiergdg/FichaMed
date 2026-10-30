@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b6e6e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="FichaMed">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png">
+<title>FichaMed · Fichas técnicas AEMPS</title>
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--tx:#1b2430;--mu:#5d6b7c;--bd:#dfe3e8;--ac:#0b6e6e;--ac2:#e3f3f2;--wa:#fff4d6;--wab:#e5b93c;--er:#fde8e8;--erb:#d65a5a;--hl:#ffe58a}
+@media (prefers-color-scheme:dark){:root{--bg:#12161b;--card:#1a2027;--tx:#e8edf2;--mu:#98a5b3;--bd:#2c353f;--ac:#4cc3bf;--ac2:#14302f;--wa:#3a2f10;--wab:#a2812a;--er:#3b1c1c;--erb:#b45050;--hl:#6b5a14}}
+*{box-sizing:border-box}body{margin:0;font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--tx)}
+header{padding:14px 20px;background:var(--card);border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:5}
+h1{font-size:18px;margin:0 0 8px}h1 span{color:var(--ac)}
+#q{width:100%;padding:11px 14px;font-size:16px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--tx)}
+main{display:grid;grid-template-columns:340px 1fr;gap:16px;padding:16px 20px;max-width:1300px;margin:auto}
+@media(max-width:850px){main{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px 16px;margin-bottom:12px}
+#res .it{padding:10px 12px;border:1px solid var(--bd);border-radius:10px;margin-bottom:8px;cursor:pointer;background:var(--card)}
+#res .it:hover,#res .it.on{border-color:var(--ac);background:var(--ac2)}
+.it b{display:block;font-size:14px}.it small{color:var(--mu)}
+.tag{display:inline-block;font-size:12px;padding:2px 8px;border-radius:99px;background:var(--ac2);color:var(--ac);margin:2px 4px 2px 0}
+.tag.w{background:var(--wa);color:var(--tx);border:1px solid var(--wab)}
+h2{font-size:16px;margin:0 0 8px;color:var(--ac)}
+.txt{white-space:pre-wrap;font-size:14.5px}
+mark{background:var(--hl);color:inherit;padding:0 2px;border-radius:3px}
+.warn{background:var(--wa);border:1px solid var(--wab);border-radius:10px;padding:10px 12px;margin-bottom:12px;font-size:13.5px}
+.err{background:var(--er);border:1px solid var(--erb);border-radius:10px;padding:10px 12px}
+details{border:1px solid var(--bd);border-radius:10px;margin-bottom:8px;background:var(--card)}
+summary{cursor:pointer;padding:10px 14px;font-weight:600}
+details .txt{padding:0 14px 12px}
+a{color:var(--ac)}.mu{color:var(--mu)}.empty{padding:40px 10px;text-align:center;color:var(--mu)}
+.kv{display:grid;grid-template-columns:150px 1fr;gap:4px 10px;font-size:14px}.kv div:nth-child(odd){color:var(--mu)}
+button.cp{float:right;font-size:12px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);border-radius:8px;padding:3px 9px;cursor:pointer}
+header{padding-top:max(14px,env(safe-area-inset-top))}
+#det{scroll-margin-top:90px}
+@media(max-width:850px){main{padding:12px}.kv{grid-template-columns:110px 1fr}}
+</style></head><body>
+<header><h1>Ficha<span>Med</span> <small class="mu" style="font-weight:400">· fichas técnicas AEMPS (CIMA)</small></h1>
+<input id="q" placeholder="Nombre comercial o principio activo (ej. vancomicina, Augmentin, amiodarona…)" autofocus></header>
+<main><section id="res"><div class="empty">Escribe al menos 2 letras para buscar.</div></section>
+<section id="det"><div class="empty">Selecciona un medicamento.</div></section></main>
+<script>
+const $=s=>document.querySelector(s);
+const KW=/(suero\w*|cloruro s[óo]dico|cloruro de sodio|NaCl|glucosa\w*|dextrosa|fisiol[óo]gic\w*|Ringer|lactato|agua para (?:inyecci[óo]n|preparaciones inyectables)|dilu\w+|reconstitu\w+|incompatib\w+|compatib\w+|no (?:debe|debe[n]?) (?:mezclarse|administrarse)\w*|mezcl\w+|perfusi[óo]n\w*|infusi[óo]n\w*|bolo|\d+(?:[.,]\d+)?\s?(?:ml|mL|ML|l|L)\b|\d+(?:[.,]\d+)?\s?(?:mg\/ml|mg\/mL|mcg\/ml|g\/l)|minutos?|horas?|pH)/gi;
+const esc=s=>s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const hl=(s,on=true)=>on?esc(s).replace(KW,'<mark>$1</mark>'):esc(s);
+let t,cur;
+$('#q').addEventListener('input',e=>{clearTimeout(t);t=setTimeout(()=>buscar(e.target.value),350)});
+
+const CIMA='https://cima.aemps.es/cima/rest';
+const SECC={"4.1":"Indicaciones terapéuticas","4.2":"Posología y forma de administración","4.3":"Contraindicaciones","4.4":"Advertencias y precauciones","4.5":"Interacciones","4.6":"Fertilidad, embarazo y lactancia","4.9":"Sobredosis","6.1":"Lista de excipientes","6.2":"Incompatibilidades","6.3":"Periodo de validez","6.4":"Precauciones especiales de conservación","6.6":"Precauciones especiales de eliminación y otras manipulaciones"};
+const BLOQUE=["6.2","6.6","6.3"];
+const memo={};
+// Si CIMA no admite peticiones desde el navegador (CORS), pon aquí la URL de tu Worker de Cloudflare,
+// por ejemplo: 'https://fichamed-proxy.TUUSUARIO.workers.dev'  (sin barra final). Vacío = solo directo.
+const PROXY='';
+async function cj(path,params){
+ const qs=new URLSearchParams(params||{}).toString();
+ const rutas=[CIMA+path+(qs?'?'+qs:'')];
+ if(PROXY)rutas.push(PROXY+path+(qs?'?'+qs:''));
+ const key=rutas[0];if(memo[key])return memo[key];
+ let r=null;
+ for(const u of rutas){
+  try{r=await fetch(u,{headers:{Accept:'application/json'}});break}catch(e){}
+ }
+ if(!r)throw new Error('No se pudo conectar con CIMA. Revisa tu conexión. Si es la primera vez, puede que CIMA no permita peticiones directas desde el navegador y haga falta configurar el intermediario (PROXY).');
+ if(!r.ok)throw new Error('CIMA respondió con error '+r.status);
+ const d=await r.json();memo[key]=d;return d}
+function htmlTexto(html){
+ const doc=new DOMParser().parseFromString(html||'','text/html');
+ doc.querySelectorAll('br').forEach(b=>b.replaceWith('\n'));
+ doc.querySelectorAll('li').forEach(e=>e.prepend('• '));
+ doc.querySelectorAll('td,th').forEach(e=>e.append(' | '));
+ doc.querySelectorAll('p,div,li,tr,h1,h2,h3,h4,h5,h6,table,ul,ol').forEach(e=>{e.prepend('\n');e.append('\n')});
+ return (doc.body.textContent||'').replace(/\u00a0/g,' ').split('\n')
+  .map(l=>l.replace(/[ \t]+/g,' ').trim().replace(/(\s*\|\s*)+$/,'')).filter(Boolean).join('\n')}
+const cmpSec=(a,b)=>{const x=a.split('.').map(Number),y=b.split('.').map(Number);for(let i=0;i<Math.max(x.length,y.length);i++){const d=(x[i]||0)-(y[i]||0);if(d)return d}return 0};
+function agrupar(secs,k){return Object.keys(secs).sort(cmpSec).filter(s=>s===k||s.startsWith(k+'.')).map(s=>secs[s].texto).filter(Boolean).join('\n')}
+async function apiBuscar(q){
+ const vistos=new Set(),out=[];
+ for(const p of [{nombre:q},{practiv1:q}]){
+  let d;try{d=await cj('/medicamentos',{...p,comerc:1,tamanioPagina:25})}catch(e){if(!out.length&&p.practiv1)throw e;continue}
+  for(const m of d.resultados||[]){if(vistos.has(m.nregistro))continue;vistos.add(m.nregistro);
+   out.push({nregistro:m.nregistro,nombre:m.nombre,labtitular:m.labtitular,dosis:m.dosis,
+    forma:(m.formaFarmaceuticaSimplificada||m.formaFarmaceutica||{}).nombre,vias:(m.viasAdministracion||[]).map(v=>v.nombre)})}}
+ return {resultados:out.slice(0,40)}}
+async function apiMed(n){
+ const m=await cj('/medicamento',{nregistro:n});
+ let data=await cj('/docSegmentado/contenido/1',{nregistro:n});
+ if(!Array.isArray(data))data=data.secciones||data.resultados||[data];
+ const secs={};for(const s of data){const k=String(s.seccion||'').trim();if(k)secs[k]={titulo:(s.titulo||'').trim(),texto:htmlTexto(s.contenido)}}
+ const info={nregistro:m.nregistro,nombre:m.nombre,labtitular:m.labtitular,dosis:m.dosis,receta:m.receta,generico:m.generico,biosimilar:m.biosimilar,huerfano:m.huerfano,triangulo:m.triangulo,psum:m.psum,notas:m.notas,materialesInf:m.materialesInf,
+  forma:(m.formaFarmaceutica||{}).nombre,vias:(m.viasAdministracion||[]).map(v=>v.nombre),
+  pactivos:(m.principiosActivos||[]).map(p=>({nombre:p.nombre,cantidad:p.cantidad,unidad:p.unidad})),
+  atc:(m.atcs||[]).map(a=>({codigo:a.codigo,nombre:a.nombre})),
+  url_ficha:'https://cima.aemps.es/cima/dochtml/ft/'+n+'/FichaTecnica.html',url_cima:'https://cima.aemps.es/cima/publico/detalle.html?nregistro='+n};
+ const bloques={};for(const k in SECC)bloques[k]={titulo:SECC[k],texto:agrupar(secs,k)};
+ return {info,secciones:bloques,bloque_dilucion:BLOQUE,n_secciones_recibidas:Object.keys(secs).length}}
+async function j(u){
+ const url=new URL(u,'http://x');
+ if(url.pathname==='/api/buscar')return apiBuscar(url.searchParams.get('q')||'');
+ if(url.pathname==='/api/med')return apiMed((url.searchParams.get('nregistro')||'').replace(/\D/g,''));
+ throw new Error('ruta desconocida')}
+
+async function buscar(q){
+ if(q.trim().length<2){$('#res').innerHTML='<div class="empty">Escribe al menos 2 letras.</div>';return}
+ $('#res').innerHTML='<div class="empty">Buscando…</div>';
+ try{const d=await j('/api/buscar?q='+encodeURIComponent(q));
+  if(!d.resultados.length){$('#res').innerHTML='<div class="empty">Sin resultados comercializados.</div>';return}
+  $('#res').innerHTML=d.resultados.map(m=>`<div class="it" data-n="${m.nregistro}"><b>${esc(m.nombre||'')}</b><small>${esc(m.forma||'')} · ${esc((m.vias||[]).join(', '))}<br>${esc(m.labtitular||'')}</small></div>`).join('');
+  document.querySelectorAll('.it').forEach(el=>el.onclick=()=>abrir(el.dataset.n,el));
+ }catch(e){$('#res').innerHTML=`<div class="err">${esc(e.message)}</div>`}
+}
+async function abrir(n,el){
+ document.querySelectorAll('.it').forEach(x=>x.classList.remove('on'));el&&el.classList.add('on');
+ $('#det').innerHTML='<div class="empty">Cargando ficha técnica…</div>';
+ try{const d=await j('/api/med?nregistro='+n);cur=d;pintar(d);if(innerWidth<850)$('#det').scrollIntoView({behavior:'smooth'});else window.scrollTo({top:0,behavior:'smooth'})}
+ catch(e){$('#det').innerHTML=`<div class="err">${esc(e.message)}</div>`}
+}
+function sec(d,k,open,hlOn=true){const s=d.secciones[k];
+ if(!s||!s.texto)return`<details><summary>${k} · ${esc(s?s.titulo:k)} <span class="mu">— no disponible</span></summary></details>`;
+ return`<details ${open?'open':''}><summary>${k} · ${esc(s.titulo)}</summary><div class="txt">${hl(s.texto,hlOn)}</div></details>`}
+function pintar(d){
+ const i=d.info,tags=[];
+ if(i.receta)tags.push('<span class="tag">Con receta</span>');
+ if(i.generico)tags.push('<span class="tag">EFG / genérico</span>');
+ if(i.biosimilar)tags.push('<span class="tag">Biosimilar</span>');
+ if(i.triangulo)tags.push('<span class="tag w">▼ Seguimiento adicional</span>');
+ if(i.psum)tags.push('<span class="tag w">Problema de suministro</span>');
+ if(i.notas)tags.push('<span class="tag w">Notas de seguridad AEMPS</span>');
+ if(i.materialesInf)tags.push('<span class="tag w">Materiales informativos de seguridad</span>');
+ if(i.huerfano)tags.push('<span class="tag">Huérfano</span>');
+ const dil=d.bloque_dilucion.map(k=>d.secciones[k]).filter(s=>s&&s.texto);
+ let h=`<div class="card"><h2>${esc(i.nombre)}</h2>${tags.join('')}
+ <div class="kv" style="margin-top:8px"><div>Principio(s) activo(s)</div><div>${i.pactivos.map(p=>esc(p.nombre)+(p.cantidad?' '+esc(p.cantidad)+' '+esc(p.unidad||''):'')).join('; ')}</div>
+ <div>Forma farmacéutica</div><div>${esc(i.forma||'—')}</div><div>Vía(s)</div><div>${esc((i.vias||[]).join(', ')||'—')}</div>
+ <div>Titular</div><div>${esc(i.labtitular||'—')}</div><div>ATC</div><div>${i.atc.map(a=>esc(a.codigo+' '+a.nombre)).join(' · ')||'—'}</div>
+ <div>Nº registro</div><div>${i.nregistro} · <a href="${i.url_ficha}" target="_blank" rel="noopener">Ficha técnica original</a> · <a href="${i.url_cima}" target="_blank" rel="noopener">CIMA</a></div></div></div>`;
+ if(!d.n_secciones_recibidas)h+=`<div class="err" style="margin-bottom:12px">CIMA no devolvió el contenido segmentado de la ficha técnica. Consulta la ficha original.</div>`;
+ h+=`<div class="warn">⚠️ Texto literal de la ficha técnica, con palabras clave resaltadas automáticamente (no es un resumen ni una interpretación). Contrasta siempre con la ficha original y con el servicio de farmacia antes de preparar o administrar. Si la ficha no menciona una dilución concreta, <b>no implica que esté permitida</b>.</div>`;
+ h+=`<div class="card"><button class="cp" onclick="cp()">Copiar</button><h2>💧 Preparación, dilución y compatibilidad</h2>`;
+ if(dil.length)h+=dil.map(s=>`<p style="margin:10px 0 4px"><b>${esc(s.titulo)}</b></p><div class="txt">${hl(s.texto)}</div>`).join('');
+ else h+='<p class="mu">Las secciones 6.2, 6.3 y 6.6 están vacías o no disponibles.</p>';
+ h+=`<p style="margin:12px 0 4px"><b>Posología y forma de administración (4.2)</b> <span class="mu">— busca aquí vía, velocidad y diluyentes</span></p>`;
+ h+=d.secciones['4.2'].texto?`<div class="txt">${hl(d.secciones['4.2'].texto)}</div>`:'<p class="mu">No disponible.</p>';
+ h+='</div>';
+ h+=['4.1','4.3','4.4','4.5','4.6','4.9','6.1','6.4'].map(k=>sec(d,k,k==='4.5')).join('');
+ $('#det').innerHTML=h;
+}
+function cp(){if(!cur)return;const i=cur.info,s=cur.secciones;
+ const t=[i.nombre,'Nº registro '+i.nregistro,'',...cur.bloque_dilucion.map(k=>s[k]&&s[k].texto?s[k].titulo+'\n'+s[k].texto:''),'4.2 '+(s['4.2'].texto||''),'','Fuente: '+i.url_ficha].join('\n');
+ navigator.clipboard.writeText(t)}
+if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+</script></body></html>
