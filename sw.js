@@ -1,5 +1,5 @@
 // Service worker: guarda solo la interfaz (no las respuestas de CIMA, que siempre se piden en directo).
-const V = 'fichamed-v3';
+const V = 'fichamed-v4';
 const SHELL = ['./', 'index.html', 'manifest.webmanifest', 'doctor-perro.png', 'icon-180.png', 'icon-192.png', 'icon-512.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(V).then(c => c.addAll(SHELL))); self.skipWaiting(); });
 self.addEventListener('activate', e => {
