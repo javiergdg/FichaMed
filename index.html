@@ -31,8 +31,6 @@
       --ert: #991b1b;
       --erb: #fecaca;
       --hl: #fde047;
-      --fav: #eab308;
-      --fav-bg: #fef9c3;
       --sh: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
       --sh-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
       --radius: 12px;
@@ -57,8 +55,6 @@
         --ert: #fca5a5;
         --erb: #682329;
         --hl: #614d0d;
-        --fav: #facc15;
-        --fav-bg: #422006;
         --sh: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
         --sh-lg: 0 10px 20px -3px rgba(0, 0, 0, 0.4);
       }
@@ -93,13 +89,6 @@
       gap: 12px;
     }
 
-    .header-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
     h1 {
       font-size: 20px;
       margin: 0;
@@ -112,55 +101,6 @@
 
     h1 span { color: var(--ac); }
     h1 small { font-weight: 400; font-size: 13px; color: var(--mu); }
-
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .btn-tab {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 7px 12px;
-      font-size: 13px;
-      font-weight: 600;
-      border: 1px solid var(--bd);
-      border-radius: 8px;
-      background: var(--bg);
-      color: var(--tx);
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-
-    .btn-tab:hover {
-      background: var(--card-alt);
-      border-color: var(--mu);
-    }
-
-    .btn-tab.active {
-      background: var(--ac);
-      color: #ffffff;
-      border-color: var(--ac);
-    }
-
-    .btn-tab .badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 18px;
-      height: 18px;
-      padding: 0 5px;
-      border-radius: 9px;
-      font-size: 11px;
-      background: rgba(0, 0, 0, 0.12);
-      color: inherit;
-    }
-
-    .btn-tab.active .badge {
-      background: rgba(255, 255, 255, 0.25);
-    }
 
     .search-row {
       display: flex;
@@ -252,9 +192,6 @@
         width: 54px;
         height: 54px;
       }
-      .header-top {
-        flex-wrap: wrap;
-      }
     }
 
     .card {
@@ -264,21 +201,6 @@
       padding: 20px;
       margin-bottom: 16px;
       box-shadow: var(--sh);
-      position: relative;
-    }
-
-    .card-head-actions {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-
-    .actions-group {
-      display: flex;
-      align-items: center;
-      gap: 8px;
     }
 
     #res {
@@ -325,13 +247,6 @@
       border-radius: 0 4px 4px 0;
     }
 
-    .it-top {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 8px;
-    }
-
     .it b {
       display: block;
       font-size: 14.5px;
@@ -346,13 +261,6 @@
       font-size: 12.5px;
       line-height: 1.4;
       display: block;
-    }
-
-    .it-offline-tag {
-      font-size: 11px;
-      color: var(--fav);
-      font-weight: bold;
-      white-space: nowrap;
     }
 
     .tag-container {
@@ -381,16 +289,9 @@
       border-color: var(--wab);
     }
 
-    .tag.offline {
-      background: var(--fav-bg);
-      color: var(--wat);
-      border-color: var(--wab);
-      font-weight: 600;
-    }
-
     h2 {
       font-size: 18px;
-      margin: 0;
+      margin: 0 0 12px;
       color: var(--ac);
       font-weight: 700;
       letter-spacing: -0.2px;
@@ -522,34 +423,28 @@
       font-weight: 500;
     }
 
-    button.cp, button.btn-save {
+    button.cp {
+      float: right;
       font-size: 12px;
       font-weight: 500;
       border: 1px solid var(--bd);
       background: var(--card);
       color: var(--tx);
       border-radius: 6px;
-      padding: 6px 12px;
+      padding: 5px 12px;
       cursor: pointer;
       transition: all 0.15s ease;
       display: inline-flex;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
     }
 
-    button.cp:hover, button.btn-save:hover {
+    button.cp:hover {
       background: var(--bg);
       border-color: var(--mu);
     }
 
-    button.btn-save.saved {
-      background: var(--fav-bg);
-      color: var(--wat);
-      border-color: var(--wab);
-      font-weight: 600;
-    }
-
-    button.cp:active, button.btn-save:active {
+    button.cp:active {
       transform: scale(0.97);
     }
 
@@ -564,21 +459,11 @@
 
 <header>
   <div class="header-inner">
-    <div class="header-top">
-      <h1>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ac)"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M12 5v14"/><path d="M5 12h14"/></svg>
-        Ficha<span>Med</span>
-        <small>· fichas técnicas AEMPS (CIMA)</small>
-      </h1>
-      <div class="header-actions">
-        <button id="btn-tab-search" class="btn-tab active" onclick="switchTab('search')">
-          🔍 Buscar
-        </button>
-        <button id="btn-tab-saved" class="btn-tab" onclick="switchTab('saved')">
-          ⭐ Guardados <span id="saved-count" class="badge">0</span>
-        </button>
-      </div>
-    </div>
+    <h1>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ac)"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+      Ficha<span>Med</span>
+      <small>· fichas técnicas AEMPS (CIMA)</small>
+    </h1>
     <div class="search-row">
       <div class="search-wrapper">
         <div class="search-icon">
@@ -608,119 +493,13 @@ const KW=/(suero\w*|cloruro s[óo]dico|cloruro de sodio|NaCl|glucosa\w*|dextrosa
 const esc=s=>s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
 const hl=(s,on=true)=>on?esc(s).replace(KW,'<mark>$1</mark>'):esc(s);
 let t,cur;
-let currentTab = 'search';
-
-$('#q').addEventListener('input',e=>{
-  if(currentTab !== 'search') switchTab('search', false);
-  clearTimeout(t);
-  t=setTimeout(()=>buscar(e.target.value),350)
-});
+$('#q').addEventListener('input',e=>{clearTimeout(t);t=setTimeout(()=>buscar(e.target.value),350)});
 
 const CIMA='https://cima.aemps.es/cima/rest';
 const SECC={"4.1":"Indicaciones terapéuticas","4.2":"Posología y forma de administración","4.3":"Contraindicaciones","4.4":"Advertencias y precauciones","4.5":"Interacciones","4.6":"Fertilidad, embarazo y lactancia","4.9":"Sobredosis","6.1":"Lista de excipientes","6.2":"Incompatibilidades","6.3":"Periodo de validez","6.4":"Precauciones especiales de conservación","6.6":"Precauciones especiales de eliminación y otras manipulaciones"};
 const BLOQUE=["6.2","6.6","6.3"];
 const memo={};
 const PROXY='';
-
-// --- GESTIÓN DE GUARDADOS OFFLINE (LOCALSTORAGE) ---
-const STORAGE_KEY = 'fichamed_saved_meds';
-
-function getSavedMeds() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : {};
-  } catch (e) {
-    return {};
-  }
-}
-
-function updateSavedCountBadge() {
-  const saved = getSavedMeds();
-  const count = Object.keys(saved).length;
-  const badge = $('#saved-count');
-  if (badge) badge.innerText = count;
-}
-
-function toggleSaveCurrent() {
-  if (!cur || !cur.info || !cur.info.nregistro) return;
-  const n = String(cur.info.nregistro);
-  const saved = getSavedMeds();
-  const btn = $('#btn-save-current');
-  
-  if (saved[n]) {
-    delete saved[n];
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
-    if (btn) {
-      btn.classList.remove('saved');
-      btn.innerHTML = '⭐ Guardar offline';
-    }
-  } else {
-    saved[n] = {
-      timestamp: Date.now(),
-      data: cur
-    };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
-    if (btn) {
-      btn.classList.add('saved');
-      btn.innerHTML = '★ Guardado offline';
-    }
-  }
-  updateSavedCountBadge();
-  if (currentTab === 'saved') renderSavedList();
-}
-
-function switchTab(tab, focusSearch = true) {
-  currentTab = tab;
-  $('#btn-tab-search').classList.toggle('active', tab === 'search');
-  $('#btn-tab-saved').classList.toggle('active', tab === 'saved');
-
-  if (tab === 'saved') {
-    renderSavedList();
-  } else {
-    const qVal = $('#q').value;
-    if (qVal.trim().length >= 2) {
-      buscar(qVal);
-    } else {
-      $('#res').innerHTML = '<div class="empty">Escribe al menos 2 letras para buscar.</div>';
-    }
-    if (focusSearch) $('#q').focus();
-  }
-}
-
-function renderSavedList() {
-  const saved = getSavedMeds();
-  const keys = Object.keys(saved);
-  if (!keys.length) {
-    $('#res').innerHTML = '<div class="empty">No tienes medicamentos guardados todavía.<br><br>Abre cualquier fármaco con internet y pulsa <b>⭐ Guardar offline</b> para consultarlo sin cobertura cuando quieras.</div>';
-    return;
-  }
-
-  // Ordenar por guardado más reciente
-  const items = keys.map(k => saved[k]).sort((a,b) => (b.timestamp||0) - (a.timestamp||0));
-  $('#res').innerHTML = items.map(entry => {
-    const m = entry.data.info;
-    const isCurrent = cur && String(cur.info.nregistro) === String(m.nregistro);
-    return `<div class="it ${isCurrent ? 'on' : ''}" data-n="${m.nregistro}" onclick="abrirOffline('${m.nregistro}', this)">
-      <div class="it-top">
-        <b>${esc(m.nombre||'')}</b>
-        <span class="it-offline-tag">★ Offline</span>
-      </div>
-      <small>${esc(m.forma||'')} · ${esc((m.vias||[]).join(', '))}<br>${esc(m.labtitular||'')}</small>
-    </div>`;
-  }).join('');
-}
-
-function abrirOffline(n, el) {
-  document.querySelectorAll('.it').forEach(x => x.classList.remove('on'));
-  if (el) el.classList.add('on');
-  const saved = getSavedMeds();
-  if (saved[n] && saved[n].data) {
-    cur = saved[n].data;
-    pintar(cur, true);
-    if (innerWidth < 850) $('#det').scrollIntoView({behavior:'smooth'});
-    else window.scrollTo({top:0, behavior:'smooth'});
-  }
-}
 
 async function cj(path,params){
  const qs=new URLSearchParams(params||{}).toString();
@@ -731,7 +510,7 @@ async function cj(path,params){
  for(const u of rutas){
   try{r=await fetch(u,{headers:{Accept:'application/json'}});break}catch(e){}
  }
- if(!r)throw new Error('Sin conexión con CIMA. Si no tienes internet, revisa tus medicamentos guardados en la pestaña "⭐ Guardados".');
+ if(!r)throw new Error('No se pudo conectar con CIMA. Revisa tu conexión. Si es la primera vez, puede que CIMA no permita peticiones directas desde el navegador y haga falta configurar el intermediario (PROXY).');
  if(!r.ok)throw new Error('CIMA respondió con error '+r.status);
  const d=await r.json();memo[key]=d;return d}
 
@@ -758,10 +537,6 @@ async function apiBuscar(q){
  return {resultados:out.slice(0,40)}}
 
 async function apiMed(n){
- // Comprobar si ya lo tenemos guardado offline
- const saved = getSavedMeds();
- if (saved[n] && saved[n].data) return saved[n].data;
-
  const m=await cj('/medicamento',{nregistro:n});
  let data=await cj('/docSegmentado/contenido/1',{nregistro:n});
  if(!Array.isArray(data))data=data.secciones||data.resultados||[data];
@@ -782,59 +557,26 @@ async function j(u){
 
 async function buscar(q){
  if(q.trim().length<2){$('#res').innerHTML='<div class="empty">Escribe al menos 2 letras.</div>';return}
- $('#res').innerHTML='<div class="empty">Buscando en CIMA…</div>';
- try{
-  const d=await j('/api/buscar?q='+encodeURIComponent(q));
+ $('#res').innerHTML='<div class="empty">Buscando…</div>';
+ try{const d=await j('/api/buscar?q='+encodeURIComponent(q));
   if(!d.resultados.length){$('#res').innerHTML='<div class="empty">Sin resultados comercializados.</div>';return}
-  const saved = getSavedMeds();
-  $('#res').innerHTML=d.resultados.map(m=>{
-    const isSaved = !!saved[String(m.nregistro)];
-    return `<div class="it" data-n="${m.nregistro}">
-      <div class="it-top">
-        <b>${esc(m.nombre||'')}</b>
-        ${isSaved ? '<span class="it-offline-tag">★ Guardado</span>' : ''}
-      </div>
-      <small>${esc(m.forma||'')} · ${esc((m.vias||[]).join(', '))}<br>${esc(m.labtitular||'')}</small>
-    </div>`;
-  }).join('');
+  $('#res').innerHTML=d.resultados.map(m=>`<div class="it" data-n="${m.nregistro}"><b>${esc(m.nombre||'')}</b><small>${esc(m.forma||'')} · ${esc((m.vias||[]).join(', '))}<br>${esc(m.labtitular||'')}</small></div>`).join('');
   document.querySelectorAll('.it').forEach(el=>el.onclick=()=>abrir(el.dataset.n,el));
- }catch(e){
-  const saved = getSavedMeds();
-  const count = Object.keys(saved).length;
-  let offlineMsg = `<div class="err">${esc(e.message)}</div>`;
-  if (count > 0) {
-    offlineMsg += `<div class="warn" style="cursor:pointer" onclick="switchTab('saved')">💡 Tienes <b>${count} medicamento(s)</b> guardados para consulta sin internet. Haz clic aquí para verlos.</div>`;
-  }
-  $('#res').innerHTML=offlineMsg;
- }
+ }catch(e){$('#res').innerHTML=`<div class="err">${esc(e.message)}</div>`}
 }
 
 async function abrir(n,el){
  document.querySelectorAll('.it').forEach(x=>x.classList.remove('on'));el&&el.classList.add('on');
  $('#det').innerHTML='<div class="empty">Cargando ficha técnica…</div>';
- try{
-  const d=await j('/api/med?nregistro='+n);
-  cur=d;
-  pintar(d);
-  if(innerWidth<850)$('#det').scrollIntoView({behavior:'smooth'});
-  else window.scrollTo({top:0,behavior:'smooth'});
- }catch(e){
-  // Si falla la red, intentar abrir desde guardados
-  const saved = getSavedMeds();
-  if (saved[n] && saved[n].data) {
-    cur = saved[n].data;
-    pintar(cur, true);
-  } else {
-    $('#det').innerHTML=`<div class="err">${esc(e.message)}</div>`;
-  }
- }
+ try{const d=await j('/api/med?nregistro='+n);cur=d;pintar(d);if(innerWidth<850)$('#det').scrollIntoView({behavior:'smooth'});else window.scrollTo({top:0,behavior:'smooth'})}
+ catch(e){$('#det').innerHTML=`<div class="err">${esc(e.message)}</div>`}
 }
 
 function sec(d,k,open,hlOn=true){const s=d.secciones[k];
  if(!s||!s.texto)return`<details><summary>${k} · ${esc(s?s.titulo:k)} <span class="mu">— no disponible</span></summary></details>`;
  return`<details ${open?'open':''}><summary>${k} · ${esc(s.titulo)}</summary><div class="txt">${hl(s.texto,hlOn)}</div></details>`}
 
-function pintar(d, isFromOffline=false){
+function pintar(d){
  const i=d.info,tags=[];
  if(i.receta)tags.push('<span class="tag">Con receta</span>');
  if(i.generico)tags.push('<span class="tag">EFG / genérico</span>');
@@ -844,24 +586,8 @@ function pintar(d, isFromOffline=false){
  if(i.notas)tags.push('<span class="tag w">Notas de seguridad AEMPS</span>');
  if(i.materialesInf)tags.push('<span class="tag w">Materiales informativos</span>');
  if(i.huerfano)tags.push('<span class="tag">Huérfano</span>');
-
- const saved = getSavedMeds();
- const isSaved = !!saved[String(i.nregistro)];
- if (isSaved || isFromOffline) {
-   tags.push('<span class="tag offline">★ Disponible sin conexión</span>');
- }
-
  const dil=d.bloque_dilucion.map(k=>d.secciones[k]).filter(s=>s&&s.texto);
- let h=`<div class="card">
- <div class="card-head-actions">
-   <h2>${esc(i.nombre)}</h2>
-   <div class="actions-group">
-     <button id="btn-save-current" class="btn-save ${isSaved ? 'saved' : ''}" onclick="toggleSaveCurrent()">
-       ${isSaved ? '★ Guardado offline' : '⭐ Guardar offline'}
-     </button>
-   </div>
- </div>
- <div class="tag-container">${tags.join('')}</div>
+ let h=`<div class="card"><h2>${esc(i.nombre)}</h2><div class="tag-container">${tags.join('')}</div>
  <div class="kv"><div>Principio(s) activo(s)</div><div>${i.pactivos.map(p=>esc(p.nombre)+(p.cantidad?' '+esc(p.cantidad)+' '+esc(p.unidad||''):'')).join('; ')}</div>
  <div>Forma farmacéutica</div><div>${esc(i.forma||'—')}</div><div>Vía(s)</div><div>${esc((i.vias||[]).join(', ')||'—')}</div>
  <div>Titular</div><div>${esc(i.labtitular||'—')}</div><div>ATC</div><div>${i.atc.map(a=>esc(a.codigo+' '+a.nombre)).join(' · ')||'—'}</div>
@@ -886,7 +612,7 @@ function cp(){
  if(btn){btn.innerText='✓ ¡Copiado!';setTimeout(()=>btn.innerText='📋 Copiar',1500)}
 }
 
-// Inicializar contador al cargar
-updateSavedCountBadge();
-
 if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+</script>
+</body>
+</html>
